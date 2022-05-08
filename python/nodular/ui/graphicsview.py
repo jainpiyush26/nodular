@@ -49,12 +49,19 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         QtCore.Qt.NoButton, event.modifiers())
         super().mouseReleaseEvent(release_event)
 
+        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+
         overld_event = QtGui.QMouseEvent(event.type(), event.localPos(),
         event.screenPos(), QtCore.Qt.LeftButton,
         event.buttons() | QtCore.Qt.LeftButton, event.modifiers())
         super().mousePressEvent(overld_event)
         
-        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        
 
     def middleMouseButtonRelease(self, event):
-        print (event.pos())
+        
+        overld_event = QtGui.QMouseEvent(event.type(), event.localPos(),
+        event.screenPos(), QtCore.Qt.LeftButton,
+        event.buttons() & ~QtCore.Qt.LeftButton, event.modifiers())
+        super().mouseReleaseEvent(overld_event)
+        self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
