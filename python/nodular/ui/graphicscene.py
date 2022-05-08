@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # std imports
 import math
-from turtle import right
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 
 # internal imports
 from nodular.ui.constants import *
+
 
 class NodularGraphicsScene(QtWidgets.QGraphicsScene):
     def __init__(self, parent=None):
