@@ -63,3 +63,7 @@ class NodularBase(QtWidgets.QWidget):
         test_layout.addWidget(test_wid_2)
         proxy1 = self.scene.addWidget(test_wid_1, QtCore.Qt.Widget)
         proxy1.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
+
+        text_box = self.scene.addText("This is a Test!")
+        text_box.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
+

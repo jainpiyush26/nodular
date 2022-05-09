@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+# std imports
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 
+# internal imports
+from nodular.ui.constants import *
 
 class NodularGraphicsView(QtWidgets.QGraphicsView):
     def __init__(self, scene, parent=None):
         super().__init__(parent)
         self._scene = scene
-        
+
         self.setup_ui()
 
         self.setScene(self._scene)
@@ -26,11 +29,16 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         # Disabling scroll bars (we will implement our own)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
         # If we are clicking the middle mouse button
         if event.button() == QtCore.Qt.MiddleButton:
             self.middleMouseButtonPress(event)
+        elif event.button() == QtCore.Qt.LeftButton:
+            self.leftMouseButtonPress(event)
+        elif event.button() == QtCore.Qt.RightButton:
+            self.rightMouseButtonPress(event)
         else:
             # Else work as it is
             super().mousePressEvent(event)
@@ -39,9 +47,25 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         # If we are clicking the middle mouse button
         if event.button() == QtCore.Qt.MiddleButton:
             self.middleMouseButtonRelease(event)
+        elif event.button() == QtCore.Qt.LeftButton:
+            self.leftMouseButtonRelease(event)
+        elif event.button() == QtCore.Qt.RightButton:
+            self.rightMouseButtonRelease(event)
         else:
             # Else work as it is
             super().mouseReleaseEvent(event)
+
+    def leftMouseButtonPress(self, event):
+        return super().mousePressEvent(event)
+
+    def leftMouseButtonRelease(self, event):
+        return super().mouseReleaseEvent(event)
+
+    def rightMouseButtonPress(self, event):
+        return super().mousePressEvent(event)
+
+    def rightMouseButtonRelease(self, event):
+        return super().mouseReleaseEvent(event)
 
     def middleMouseButtonPress(self, event):
         release_event = QtGui.QMouseEvent(QtCore.QEvent.MouseButtonRelease,
@@ -55,13 +79,23 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         event.screenPos(), QtCore.Qt.LeftButton,
         event.buttons() | QtCore.Qt.LeftButton, event.modifiers())
         super().mousePressEvent(overld_event)
-        
-        
 
     def middleMouseButtonRelease(self, event):
-        
         overld_event = QtGui.QMouseEvent(event.type(), event.localPos(),
         event.screenPos(), QtCore.Qt.LeftButton,
         event.buttons() & ~QtCore.Qt.LeftButton, event.modifiers())
         super().mouseReleaseEvent(overld_event)
         self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
+
+    def wheelEvent(self, event: QtGui.QWheelEvent):
+        # what position are we on
+        _old_pos = self.mapToScene(event.pos())
+
+        # Every time we scroll we need to change the zoome value
+        if event.angleDelta().y() > 0: # We are zooming in
+            zoomfactor = ZOOM_IN_FACTOR
+        else:
+            zoomfactor = ZOOM_OUT_FACTOR
+
+        #  change the scale
+        self.scale(zoomfactor, zoomfactor)
