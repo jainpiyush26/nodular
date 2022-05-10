@@ -15,6 +15,7 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         self.setup_ui()
 
         self.setScene(self._scene)
+        self.zoomvalue = 0
 
     def setup_ui(self):
 
@@ -88,14 +89,19 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
 
     def wheelEvent(self, event: QtGui.QWheelEvent):
-        # what position are we on
-        _old_pos = self.mapToScene(event.pos())
-
         # Every time we scroll we need to change the zoome value
         if event.angleDelta().y() > 0: # We are zooming in
             zoomfactor = ZOOM_IN_FACTOR
+            self.zoomvalue += 1
         else:
             zoomfactor = ZOOM_OUT_FACTOR
-
-        #  change the scale
+            self.zoomvalue -= 1
+        
+        if self.zoomvalue not in ZOOM_RANGE:
+            if self.zoomvalue < ZOOM_RANGE[0]:
+                self.zoomvalue = ZOOM_RANGE[0]
+            elif self.zoomvalue > ZOOM_RANGE[-1]:
+                self.zoomvalue = ZOOM_RANGE[-1]
+            return event.ignore()
+        #  change the scale if we are not ignoring the event
         self.scale(zoomfactor, zoomfactor)

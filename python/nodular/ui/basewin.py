@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 
 # internal imports
-from nodular.ui.graphicscene import NodularGraphicsScene
+from nodular.ui.scene import Scene
 from nodular.ui.graphicsview import NodularGraphicsView
 
 
@@ -34,7 +34,8 @@ class NodularBase(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
         # Set the graphics scene
-        self.scene = NodularGraphicsScene()
+        self.parent_scene = Scene()
+        self.scene = self.parent_scene.nodular_scene
 
         # Set the graphics view
         self.view = NodularGraphicsView(self.scene, self)
