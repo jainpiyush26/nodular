@@ -5,8 +5,9 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 
 # internal imports
-from nodular.ui.scene import Scene
+from nodular.ui.graphicsscene import NodularGraphicsScene
 from nodular.ui.graphicsview import NodularGraphicsView
+from nodular.ui.graphicsnode import NodularGraphicsNode
 
 
 class NodularBase(QtWidgets.QWidget):
@@ -34,37 +35,19 @@ class NodularBase(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
         # Set the graphics scene
-        self.parent_scene = Scene()
-        self.scene = self.parent_scene.nodular_scene
+        self.scene = NodularGraphicsScene()
 
         # Set the graphics view
-        self.view = NodularGraphicsView(self.scene, self)
+        self.view = NodularGraphicsView(self.scene.nodular_scene,
+        self)
         
         self.layout.addWidget(self.view)
         # Set the window title
         self.setWindowTitle("Nodular")
 
-        self.test_objects_add()
-
-    def test_objects_add(self):
-
-        _test_pen = QtGui.QPen(QtCore.Qt.GlobalColor.black)
-        _test_pen.setWidth(2)
-
-        rect = self.scene.addRect(-100,-100,50,80,_test_pen,
-        QtGui.QColor(QtCore.Qt.GlobalColor.green))
-
-        rect.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
-
-
-        test_wid_1 = QtWidgets.QWidget()
-        test_layout = QtWidgets.QVBoxLayout()
-        test_wid_1.setLayout(test_layout)
-        test_wid_2 = QtWidgets.QPushButton("Hello There!")
-        test_layout.addWidget(test_wid_2)
-        proxy1 = self.scene.addWidget(test_wid_1, QtCore.Qt.Widget)
-        proxy1.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
-
-        text_box = self.scene.addText("This is a Test!")
-        text_box.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
+        # add the nodes here!
+        self.add_nodes()
+    
+    def add_nodes(self):
+        node = NodularGraphicsNode(self.scene, "First Node")
 

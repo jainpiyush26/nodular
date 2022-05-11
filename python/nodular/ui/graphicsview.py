@@ -96,7 +96,7 @@ class NodularGraphicsView(QtWidgets.QGraphicsView):
         else:
             zoomfactor = ZOOM_OUT_FACTOR
             self.zoomvalue -= 1
-        
+
         if self.zoomvalue not in ZOOM_RANGE:
             if self.zoomvalue < ZOOM_RANGE[0]:
                 self.zoomvalue = ZOOM_RANGE[0]
