@@ -1,20 +1,22 @@
 #!/usr/bin/env python
 # std imports
-from ctypes.wintypes import RECT
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 
 # internal imports
 from nodular.ui.constants import *
+from nodular.ui.textwidgetcontent import TextWidgetContent
 
 
 class NodularGraphicsNode:
-    def __init__(self, scene, title="Undefined Node"):
+    def __init__(self, scene, node_content, title="Undefined Node"):
         self.scene = scene
         self.title = title
         
-        self.nodular_node = _NodularGraphicsNode(self, self.title)
+        self.node_content = node_content
+
+        self.nodular_node = _NodularGraphicsNode(self)
 
         self.scene.add_node(self.nodular_node)
 
@@ -24,9 +26,10 @@ class NodularGraphicsNode:
 
 
 class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
-    def __init__(self, node, title, parent=None):
+    def __init__(self, node, parent=None):
         super().__init__(parent)
         self.node = node
+        self.content = self.node.node_content
         self.init_ui()
 
         # Pen used for painting
@@ -40,7 +43,7 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
         self._brush_bg = QtGui.QBrush(QtGui.QColor(BG_BRUSH_COLOR))
 
         # Let set the properties
-        self.title = title
+        self.title = self.node.title
         self.title_color = QtCore.Qt.white
 
     def set_flags(self):
@@ -49,6 +52,8 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
     def init_ui(self):
         self.set_flags()
         self.init_title()
+        self.init_sockets()
+        self.init_content()
 
     @property
     def title(self):
@@ -113,3 +118,20 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
     def init_title(self):
         self.title_item = QtWidgets.QGraphicsTextItem(self)
 
+    def init_content(self):
+        self.gr_content = QtWidgets.QGraphicsProxyWidget(self)
+        self.content.setGeometry(RECT_RADIUS, TITLE_HEIGHT+RECT_RADIUS, 
+        WIDTH-2*RECT_RADIUS, HEIGHT-2*RECT_RADIUS-TITLE_HEIGHT)
+        self.gr_content.setWidget(self.content)
+
+    def init_sockets(self):
+        pass
+
+
+class TextNodularGraphicsNode(NodularGraphicsNode):
+    def __init__(self, scene, title):
+        self.node_content = TextWidgetContent()
+        self.scene = scene
+        self.title = title
+        super().__init__(scene=scene, node_content=self.node_content,
+        title=self.title)

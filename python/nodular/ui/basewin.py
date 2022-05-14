@@ -7,7 +7,7 @@ from PyQt5 import QtGui
 # internal imports
 from nodular.ui.graphicsscene import NodularGraphicsScene
 from nodular.ui.graphicsview import NodularGraphicsView
-from nodular.ui.graphicsnode import NodularGraphicsNode
+from nodular.ui.graphicsnode import TextNodularGraphicsNode
 
 
 class NodularBase(QtWidgets.QWidget):
@@ -49,5 +49,5 @@ class NodularBase(QtWidgets.QWidget):
         self.add_nodes()
     
     def add_nodes(self):
-        node = NodularGraphicsNode(self.scene, "First Node")
+        node = TextNodularGraphicsNode(self.scene, "First Node")
 
