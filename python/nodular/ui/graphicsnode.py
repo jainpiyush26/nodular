@@ -7,22 +7,23 @@ from PyQt5 import QtCore
 # internal imports
 from nodular.ui.constants import *
 from nodular.ui.textwidgetcontent import TextWidgetContent
+from nodular.ui.nodesockets import Sockets
 
 
 class NodularGraphicsNode:
-    def __init__(self, scene, node_content, title="Undefined Node"):
+    def __init__(self, scene, node_content, inputs=[], outputs=[],
+                 title="Undefined Node"):
         self.scene = scene
         self.title = title
-        
+
+        self.inputs = inputs
+        self.outputs = outputs
+
         self.node_content = node_content
 
         self.nodular_node = _NodularGraphicsNode(self)
 
         self.scene.add_node(self.nodular_node)
-
-
-        self.inputs = list()
-        self.outputs = list()
 
 
 class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
@@ -47,7 +48,8 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
         self.title_color = QtCore.Qt.white
 
     def set_flags(self):
-        self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable | QtWidgets.QGraphicsItem.ItemIsMovable)
+        self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable |\
+            QtWidgets.QGraphicsItem.ItemIsMovable)
 
     def init_ui(self):
         self.set_flags()
@@ -73,8 +75,10 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
         self._title_color = value
         self.title_item.setDefaultTextColor(self.title_color)
 
-    def paint(self, painter: QtGui.QPainter, option: 'QtWidgets.QStyleOptionGraphicsItem', widget=None) -> None:
-        # Title 
+    def paint(self, painter: QtGui.QPainter,
+              option: 'QtWidgets.QStyleOptionGraphicsItem',
+              widget=None) -> None:
+        # Title
         path_title = QtGui.QPainterPath()
         path_title.setFillRule(QtCore.Qt.WindingFill)
         path_title.addRoundedRect(0, 0, WIDTH, TITLE_HEIGHT, RECT_RADIUS,
@@ -102,12 +106,13 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
         painter.setBrush(self._brush_bg)
         painter.drawPath(path_content.simplified())
 
-        # OUTLINE 
+        # OUTLINE
         path_outline = QtGui.QPainterPath()
         path_outline.addRoundedRect(0 ,0, WIDTH, HEIGHT, RECT_RADIUS,
         RECT_RADIUS)
 
-        painter.setPen(self._pen_default if not self.isSelected() else self._pen_selected)
+        painter.setPen(self._pen_default if not self.isSelected() \
+            else self._pen_selected)
         painter.setBrush(QtCore.Qt.NoBrush)
         painter.drawPath(path_outline.simplified())
 
@@ -120,8 +125,9 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
 
     def init_content(self):
         self.gr_content = QtWidgets.QGraphicsProxyWidget(self)
-        self.content.setGeometry(RECT_RADIUS, TITLE_HEIGHT+RECT_RADIUS, 
-        WIDTH-2*RECT_RADIUS, HEIGHT-2*RECT_RADIUS-TITLE_HEIGHT)
+        self.content.setGeometry(RECT_RADIUS, TITLE_HEIGHT+RECT_RADIUS,
+                                 WIDTH-2*RECT_RADIUS,
+                                 HEIGHT-2*RECT_RADIUS-TITLE_HEIGHT)
         self.gr_content.setWidget(self.content)
 
     def init_sockets(self):
@@ -134,4 +140,19 @@ class TextNodularGraphicsNode(NodularGraphicsNode):
         self.scene = scene
         self.title = title
         super().__init__(scene=scene, node_content=self.node_content,
-        title=self.title)
+                         title=self.title)
+
+        _input_count=3
+        _input_position=LEFT_BOTTOM
+        _output_count=1
+        _ouput_position=RIGHT_TOP
+
+        for index in range(1,_input_count+1):
+            self.inputs.append(Sockets(node=self,
+                                       index=index,
+                                       position=_input_position))
+
+        for index in range(1, _output_count+1):
+            self.outputs.append(Sockets(node=self,
+                                        index=index,
+                                        position=_ouput_position))

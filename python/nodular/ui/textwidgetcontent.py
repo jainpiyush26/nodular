@@ -11,7 +11,6 @@ class TextWidgetContent(QtWidgets.QWidget):
         super().__init__(parent)
 
         self.stylesheet_name = pathlib.Path(__file__).parent / "qss/nodular.qss"
-        print (type(self.stylesheet_name))
 
         self.init_ui()
 

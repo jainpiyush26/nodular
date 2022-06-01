@@ -40,14 +40,14 @@ class NodularBase(QtWidgets.QWidget):
         # Set the graphics view
         self.view = NodularGraphicsView(self.scene.nodular_scene,
         self)
-        
+
         self.layout.addWidget(self.view)
         # Set the window title
         self.setWindowTitle("Nodular")
 
         # add the nodes here!
         self.add_nodes()
-    
+
     def add_nodes(self):
         node = TextNodularGraphicsNode(self.scene, "First Node")
-
+        node = TextNodularGraphicsNode(self.scene, "Second Node")
