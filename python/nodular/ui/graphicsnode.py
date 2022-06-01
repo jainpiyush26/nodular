@@ -141,9 +141,9 @@ class TextNodularGraphicsNode(NodularGraphicsNode):
         super().__init__(scene=scene, node_content=self.node_content,
                          title=self.title)
 
-        _input_count=3
+        _input_count=TEXT_NODE_INPUTS
         _input_position=LEFT_BOTTOM
-        _output_count=1
+        _output_count=TEXT_NODE_OUTPUTS
         _ouput_position=RIGHT_TOP
 
         for index in range(1,_input_count+1):
