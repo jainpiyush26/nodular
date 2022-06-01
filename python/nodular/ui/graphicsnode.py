@@ -117,8 +117,7 @@ class _NodularGraphicsNode(QtWidgets.QGraphicsItem):
         painter.drawPath(path_outline.simplified())
 
     def boundingRect(self) -> QtCore.QRectF:
-        return QtCore.QRectF(0, 0, 2*RECT_RADIUS+WIDTH,
-        2*RECT_RADIUS+HEIGHT).normalized()
+        return QtCore.QRectF(0, 0, WIDTH,HEIGHT).normalized()
 
     def init_title(self):
         self.title_item = QtWidgets.QGraphicsTextItem(self)
