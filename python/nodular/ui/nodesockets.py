@@ -20,7 +20,9 @@ class _Sockets(QtWidgets.QGraphicsItem):
         self.pen.setWidthF(self.width)
         self.brush = QtGui.QBrush(self.colour_bg)
 
-    def paint(self, painter: QtGui.QPainter, option: 'QStyleOptionGraphicsItem', widget: None) -> None:
+    def paint(self, painter: QtGui.QPainter,
+              option: 'QtCore.QStyleOptionGraphicsItem',
+              widget: None) -> None:
 
         # Let's paint a circle
         painter.setBrush(self.brush)
